@@ -716,25 +716,29 @@ const FloatingPromptInputInner = (
 
   return (
     <>
-      {/* Expanded Modal */}
+      {/* Expanded Sidebar */}
       <AnimatePresence>
         {isExpanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
-            onClick={() => setIsExpanded(false)}
-          >
+          <>
+            {/* Transparent overlay to close on click */}
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-background border border-border rounded-lg shadow-lg w-full max-w-2xl p-4 space-y-4"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40"
+              onClick={() => setIsExpanded(false)}
+            />
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-2xl bg-background border-l border-border shadow-2xl flex flex-col"
             >
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium">Compose your prompt</h3>
+              {/* Fixed Header */}
+              <div className="flex items-center justify-between p-6 pb-4 border-b border-border">
+                <h3 className="text-lg font-medium">Compose your prompt</h3>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -744,32 +748,37 @@ const FloatingPromptInputInner = (
                   <Minimize2 className="h-4 w-4" />
                 </Button>
               </div>
+              
+              {/* Scrollable Content */}
+              <div className="flex-1 flex flex-col p-6 pt-4 space-y-4 overflow-hidden">
 
               {/* Image previews in expanded mode */}
               {embeddedImages.length > 0 && (
                 <ImagePreview
                   images={embeddedImages}
                   onRemove={handleRemoveImage}
-                  className="border-t border-border pt-2"
+                  className=""
                 />
               )}
 
-              <Textarea
-                ref={expandedTextareaRef}
-                value={prompt}
-                onChange={handleTextChange}
-                onPaste={handlePaste}
-                placeholder="Type your prompt here..."
-                className="min-h-[200px] resize-none"
-                disabled={disabled}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              />
+              <div className="flex-1 overflow-y-auto">
+                <Textarea
+                  ref={expandedTextareaRef}
+                  value={prompt}
+                  onChange={handleTextChange}
+                  onPaste={handlePaste}
+                  placeholder="Type your prompt here..."
+                  className="w-full h-full min-h-[400px] resize-none"
+                  disabled={disabled}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                />
+              </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between pt-4 border-t border-border">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground">Model:</span>
                     <Button
@@ -859,8 +868,9 @@ const FloatingPromptInputInner = (
                   )}
                 </Button>
               </div>
+              </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
 
