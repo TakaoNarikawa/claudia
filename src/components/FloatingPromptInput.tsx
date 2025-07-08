@@ -611,7 +611,8 @@ const FloatingPromptInputInner = (
       return;
     }
 
-    if (e.key === "Enter" && !e.shiftKey && !isExpanded && !showFilePicker && !showSlashCommandPicker) {
+    // Only send with Shift+Enter, not Enter alone
+    if (e.key === "Enter" && e.shiftKey && !isExpanded && !showFilePicker && !showSlashCommandPicker) {
       e.preventDefault();
       handleSend();
     }
@@ -1065,7 +1066,7 @@ const FloatingPromptInputInner = (
             </div>
 
             <div className="mt-2 text-xs text-muted-foreground">
-              Press Enter to send, Shift+Enter for new line{projectPath?.trim() && ", @ to mention files, / for commands, drag & drop or paste images"}
+              Press Shift+Enter to send, Enter for new line{projectPath?.trim() && ", @ to mention files, / for commands, drag & drop or paste images"}
             </div>
           </div>
         </div>
