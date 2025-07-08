@@ -174,7 +174,18 @@ const FloatingPromptInputInner = (
   ref: React.Ref<FloatingPromptInputRef>,
 ) => {
   const [prompt, setPrompt] = useState("");
-  const [selectedModel, setSelectedModel] = useState<"sonnet" | "opus">(defaultModel);
+  // Load model preference from localStorage or use defaultModel
+  const [selectedModel, setSelectedModel] = useState<"sonnet" | "opus">(() => {
+    try {
+      const savedModel = localStorage.getItem('claudia-preferred-model');
+      if (savedModel === 'opus' || savedModel === 'sonnet') {
+        return savedModel;
+      }
+    } catch (error) {
+      console.error('Error loading model preference:', error);
+    }
+    return defaultModel;
+  });
   const [selectedThinkingMode, setSelectedThinkingMode] = useState<ThinkingMode>("auto");
   const [isExpanded, setIsExpanded] = useState(false);
   const [modelPickerOpen, setModelPickerOpen] = useState(false);
@@ -920,6 +931,12 @@ const FloatingPromptInputInner = (
                         onClick={() => {
                           setSelectedModel(model.id);
                           setModelPickerOpen(false);
+                          // Save model preference to localStorage
+                          try {
+                            localStorage.setItem('claudia-preferred-model', model.id);
+                          } catch (error) {
+                            console.error('Error saving model preference:', error);
+                          }
                         }}
                         className={cn(
                           "w-full flex items-start gap-3 p-3 rounded-md transition-colors text-left",
