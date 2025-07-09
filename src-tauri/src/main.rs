@@ -42,6 +42,9 @@ use commands::storage::{
     storage_list_tables, storage_read_table, storage_update_row, storage_delete_row,
     storage_insert_row, storage_execute_sql, storage_reset_database,
 };
+use commands::window::{
+    create_new_window, list_windows, close_window, update_window_title,
+};
 use process::ProcessRegistryState;
 use std::sync::Mutex;
 use tauri::Manager;
@@ -195,6 +198,12 @@ fn main() {
             commands::slash_commands::slash_command_get,
             commands::slash_commands::slash_command_save,
             commands::slash_commands::slash_command_delete,
+            
+            // Window Management
+            create_new_window,
+            list_windows,
+            close_window,
+            update_window_title,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

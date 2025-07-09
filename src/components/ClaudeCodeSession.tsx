@@ -214,6 +214,13 @@ export const ClaudeCodeSession: React.FC<ClaudeCodeSessionProps> = ({
       isLoading
     });
   }, [projectPath, session, extractedSessionInfo, effectiveSession, messages.length, isLoading]);
+  
+  // Update window title when project path changes
+  useEffect(() => {
+    if (projectPath) {
+      api.updateWindowTitle(projectPath);
+    }
+  }, [projectPath]);
 
   // Load session history if resuming
   useEffect(() => {

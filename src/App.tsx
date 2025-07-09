@@ -458,6 +458,7 @@ function App() {
           onUsageClick={() => handleViewChange("usage-dashboard")}
           onMCPClick={() => handleViewChange("mcp")}
           onInfoClick={() => setShowNFO(true)}
+          projectPath={selectedProject?.path}
         />
         
         {/* Main Content */}

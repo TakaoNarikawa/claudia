@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info } from "lucide-react";
+import { Circle, FileText, Settings, ExternalLink, BarChart3, Network, Info, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/popover";
 import { api, type ClaudeVersionStatus } from "@/lib/api";
@@ -28,6 +28,10 @@ interface TopbarProps {
    */
   onInfoClick: () => void;
   /**
+   * Current project path for window title
+   */
+  projectPath?: string;
+  /**
    * Optional className for styling
    */
   className?: string;
@@ -50,6 +54,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   onUsageClick,
   onMCPClick,
   onInfoClick,
+  projectPath,
   className,
 }) => {
   const [versionStatus, setVersionStatus] = useState<ClaudeVersionStatus | null>(null);
@@ -59,6 +64,11 @@ export const Topbar: React.FC<TopbarProps> = ({
   useEffect(() => {
     checkVersion();
   }, []);
+  
+  // Update window title when project path changes
+  useEffect(() => {
+    api.updateWindowTitle(projectPath);
+  }, [projectPath]);
   
   const checkVersion = async () => {
     try {
@@ -79,6 +89,14 @@ export const Topbar: React.FC<TopbarProps> = ({
       });
     } finally {
       setChecking(false);
+    }
+  };
+  
+  const handleNewWindow = async () => {
+    try {
+      await api.createNewWindow(projectPath);
+    } catch (err) {
+      console.error("Failed to create new window:", err);
     }
   };
   
@@ -173,6 +191,18 @@ export const Topbar: React.FC<TopbarProps> = ({
       
       {/* Action Buttons */}
       <div className="flex items-center space-x-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleNewWindow}
+          className="h-8 w-8"
+          title="New Window"
+        >
+          <Plus className="h-4 w-4" />
+        </Button>
+        
+        <div className="w-px h-6 bg-border mx-1" />
+        
         <Button
           variant="ghost"
           size="sm"

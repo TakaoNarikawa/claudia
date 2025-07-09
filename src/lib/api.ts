@@ -1835,5 +1835,61 @@ export const api = {
       console.error("Failed to delete slash command:", error);
       throw error;
     }
+  },
+
+  // Window Management API methods
+
+  /**
+   * Creates a new window
+   * @param projectPath - Optional project path to display in window title
+   * @returns Promise resolving to the window label/id
+   */
+  async createNewWindow(projectPath?: string): Promise<string> {
+    try {
+      return await invoke<string>("create_new_window", { projectPath });
+    } catch (error) {
+      console.error("Failed to create new window:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Updates the current window title
+   * @param projectPath - Optional project path to display in window title
+   * @returns Promise resolving when title is updated
+   */
+  async updateWindowTitle(projectPath?: string): Promise<void> {
+    try {
+      return await invoke<void>("update_window_title", { projectPath });
+    } catch (error) {
+      console.error("Failed to update window title:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Lists all open windows
+   * @returns Promise resolving to array of window labels
+   */
+  async listWindows(): Promise<string[]> {
+    try {
+      return await invoke<string[]>("list_windows");
+    } catch (error) {
+      console.error("Failed to list windows:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Closes the current window
+   * @returns Promise resolving when window is closed
+   */
+  async closeWindow(): Promise<void> {
+    try {
+      return await invoke<void>("close_window");
+    } catch (error) {
+      console.error("Failed to close window:", error);
+      throw error;
+    }
   }
 };
